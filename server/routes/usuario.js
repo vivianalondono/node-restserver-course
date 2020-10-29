@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const Usuario = require('../models/usuario');
-const { verificarToken } = require('../middlewares/autenticacion')
+const { verificarToken, verificarAdminRole } = require('../middlewares/autenticacion')
 const app = express();
 
 
@@ -38,7 +38,7 @@ app.get('/usuario', verificarToken, (req, res) => {
         })
 });
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificarToken, verificarAdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -65,7 +65,7 @@ app.post('/usuario', function (req, res) {
 
 });
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
 
     let id = req.params.id;
     //Indicar los campos que se van a actualizar
@@ -90,7 +90,7 @@ app.put('/usuario/:id', function (req, res) {
     
 });
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
     
     let id = req.params.id;
 
